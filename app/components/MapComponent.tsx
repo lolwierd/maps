@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Map, { Source, Layer, MapLayerMouseEvent } from 'react-map-gl';
-import maplibregl, { Map as MaplibreMap } from 'maplibre-gl';
+import Map, { MapRef } from 'react-map-gl/maplibre'; // Changed to MapLibre specific import, added MapRef
+import maplibregl, { MapLayerMouseEvent } from 'maplibre-gl'; // Removed MaplibreMap alias
 import 'maplibre-gl/dist/maplibre-gl.css';
 import TooltipComponent from './TooltipComponent'; // Import the TooltipComponent
 
 interface MapComponentProps {
-  year: number;
   geojsonData: GeoJSON.FeatureCollection | null;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ year, geojsonData }) => {
-  const mapRef = useRef<{ getMap: () => MaplibreMap }>(null);
+const MapComponent: React.FC<MapComponentProps> = ({ geojsonData }) => {
+  const mapRef = useRef<MapRef>(null); // Changed mapRef type
   const [tooltipData, setTooltipData] = useState<{ visible: boolean; x: number; y: number; content: string | null }>({
     visible: false,
     x: 0,

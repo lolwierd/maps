@@ -45,7 +45,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col h-screen w-screen m-0 p-0 overflow-hidden">
       <div className="flex-grow relative w-full">
-        <MapComponent year={currentYear} geojsonData={geojsonData} />
+        <MapComponent geojsonData={geojsonData} />
       </div>
       <div className="p-4 border-t border-gray-300 dark:border-gray-700 bg-slate-100 dark:bg-slate-800">
         <YearSliderComponent
