@@ -58,7 +58,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ geojsonData }) => {
           visible: true,
           x: event.point.x,
           y: event.point.y,
-          content: (feature.properties?.name as string) || 'N/A',
+          content: (feature.properties?.NAME as string) || 'N/A',
         });
       }
     } else {

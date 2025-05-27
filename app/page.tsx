@@ -15,17 +15,17 @@ export default function HomePage() {
   const [geojsonData, setGeojsonData] = useState<GeoJsonDataType>(null);
 
   useEffect(() => {
-    let filePath: string | null = null;
-    if (currentYear >= -250 && currentYear <= 250) {
-      filePath = '/geojson/0_ce.geojson';
-    } else if (currentYear >= 750 && currentYear <= 1250) {
-      filePath = '/geojson/1000_ce.geojson';
-    } else if (currentYear >= 1750 && currentYear <= 1950) {
-      filePath = '/geojson/1900_ce.geojson';
+    let geojsonPath: string | null = null;
+    if (currentYear >= -250 && currentYear <= 500) {
+      geojsonPath = '/geojson/0_ce.geojson';
+    } else if (currentYear >= 501 && currentYear <= 1250) {
+      geojsonPath = '/geojson/1000_ce.geojson';
+    } else if (currentYear >= 1251 && currentYear <= 1750) {
+      geojsonPath = '/geojson/1500_ce.geojson';
     }
 
-    if (filePath) {
-      fetch(filePath)
+    if (geojsonPath) {
+      fetch(geojsonPath)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
