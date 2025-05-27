@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Byzantine Empire Sample", "color": "#00FF00" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[20, 35], [35, 35], [35, 45], [20, 45], [20, 35]]]
+      }
+    }
+  ]
+}

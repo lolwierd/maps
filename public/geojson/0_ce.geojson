@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Roman Empire Sample", "color": "#FF0000" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[30, 20], [45, 20], [45, 30], [30, 30], [30, 20]]]
+      }
+    }
+  ]
+}

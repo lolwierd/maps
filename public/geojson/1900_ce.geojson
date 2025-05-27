@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "British Empire Sample", "color": "#0000FF" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-5, 50], [5, 50], [5, 60], [-5, 60], [-5, 50]]]
+      }
+    }
+  ]
+}
