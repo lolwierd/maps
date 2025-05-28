@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Map, { MapRef } from 'react-map-gl/maplibre'; // Changed to MapLibre specific import, added MapRef
-import maplibregl, { MapLayerMouseEvent } from 'maplibre-gl'; // Removed MaplibreMap alias
+import maplibregl, { MapLayerMouseEvent, Map as MaplibreMap } from 'maplibre-gl'; // Removed MaplibreMap alias, added Map from maplibre-gl
 import 'maplibre-gl/dist/maplibre-gl.css';
 import TooltipComponent from './TooltipComponent'; // Import the TooltipComponent
 
@@ -10,6 +10,8 @@ interface MapComponentProps {
 
 const MapComponent: React.FC<MapComponentProps> = ({ geojsonData }) => {
   const mapRef = useRef<MapRef>(null); // Changed mapRef type
+  const mapInstance = useRef<MaplibreMap | null>(null); // To store map instance
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [tooltipData, setTooltipData] = useState<{ visible: boolean; x: number; y: number; content: string | null }>({
     visible: false,
     x: 0,
@@ -23,32 +25,44 @@ const MapComponent: React.FC<MapComponentProps> = ({ geojsonData }) => {
     zoom: 2,
   };
 
+  const onLoad = useCallback(() => {
+    if (!mapRef.current) return;
+    mapInstance.current = mapRef.current.getMap();
+    setIsMapLoaded(true);
+  }, []); // mapRef should be stable
+
   useEffect(() => {
-    if (geojsonData && mapRef.current) {
-      const map = mapRef.current.getMap();
-      const source = map.getSource('historical-data');
+    if (isMapLoaded && mapInstance.current) {
+      const map = mapInstance.current;
 
-      if (source) {
-        (source as maplibregl.GeoJSONSource).setData(geojsonData);
+      if (geojsonData) {
+        const source = map.getSource('historical-data') as maplibregl.GeoJSONSource;
+        if (source) {
+          source.setData(geojsonData);
+        } else {
+          map.addSource('historical-data', {
+            type: 'geojson',
+            data: geojsonData,
+          });
+          map.addLayer({
+            id: 'historical-layer',
+            type: 'fill',
+            source: 'historical-data',
+            paint: {
+              'fill-color': ['coalesce', ['get', 'color'], '#CCC'],
+              'fill-opacity': 0.7,
+            },
+          });
+        }
       } else {
-        map.addSource('historical-data', {
-          type: 'geojson',
-          data: geojsonData,
-        });
-
-        map.addLayer({
-          id: 'historical-layer',
-          type: 'fill',
-          source: 'historical-data',
-          paint: {
-            // Use the 'color' property from GeoJSON features, with a fallback
-            'fill-color': ['coalesce', ['get', 'color'], '#CCC'],
-            'fill-opacity': 0.7,
-          },
-        });
+        // Handle null geojsonData: If source exists, clear it
+        const source = map.getSource('historical-data');
+        if (source) {
+          (source as maplibregl.GeoJSONSource).setData({ type: 'FeatureCollection', features: [] });
+        }
       }
     }
-  }, [geojsonData]);
+  }, [geojsonData, isMapLoaded]); // mapInstance.current is not a reactive dependency
 
   const handleMouseMove = (event: MapLayerMouseEvent) => {
     if (event.features && event.features.length > 0) {
@@ -81,6 +95,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ geojsonData }) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         interactiveLayerIds={['historical-layer']}
+        onLoad={onLoad} // Add this
       />
       <TooltipComponent
         visible={tooltipData.visible}
