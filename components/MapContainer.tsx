@@ -12,6 +12,7 @@ export default function MapContainer({ year }: MapContainerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [allData, setAllData] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (mapRef.current || !containerRef.current) return;
@@ -45,6 +46,7 @@ export default function MapContainer({ year }: MapContainerProps) {
           "line-width": 1,
         },
       });
+      setLoaded(true);
     });
     mapRef.current = map;
   }, []);
@@ -56,7 +58,7 @@ export default function MapContainer({ year }: MapContainerProps) {
   }, []);
 
   useEffect(() => {
-    if (!mapRef.current || !allData) return;
+    if (!mapRef.current || !allData || !loaded) return;
     const active = {
       type: "FeatureCollection",
       features: allData.features.filter((f) => {
@@ -69,7 +71,7 @@ export default function MapContainer({ year }: MapContainerProps) {
     } as GeoJSON.FeatureCollection;
     const src = mapRef.current.getSource("historical") as maplibregl.GeoJSONSource;
     src.setData(active);
-  }, [year, allData]);
+  }, [year, allData, loaded]);
 
   return <div ref={containerRef} className="w-full h-full" />;
 }
