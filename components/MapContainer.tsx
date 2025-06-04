@@ -73,5 +73,5 @@ export default function MapContainer({ year }: MapContainerProps) {
     src.setData(active);
   }, [year, allData, loaded]);
 
-  return <div ref={containerRef} className="w-full h-full" />;
+  return <div ref={containerRef} className="absolute inset-0" />;
 }

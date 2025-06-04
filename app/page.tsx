@@ -10,8 +10,8 @@ export default function Home() {
   const [year, setYear] = useState(0);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-1">
+    <div className="h-screen flex flex-col">
+      <div className="flex-1 min-h-0 relative">
         <MapContainer year={year} />
       </div>
       <YearSlider
